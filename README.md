@@ -1,5 +1,5 @@
 # Jasco .jws to .csv converter
-This project aims to read JWS files obtained from Jasco spectrometers and batch convert them to csv files.
+This project aims to read jws files obtained from Jasco spectrometers and batch convert them to csv files.
 
 ## Dependencies
 This project uses Python 3 and depends on these modules: (you can install them via pip)
