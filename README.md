@@ -2,7 +2,7 @@
 This project aims to read JWS files obtained from Jasco spectrometers and batch convert them to csv files.
 
 ## Dependencies
-This project depends on these modules: (you can install them via pip)
+This project uses Python 3 and depends on these modules: (you can install them via pip)
 - tkinter
 - olefile
 
