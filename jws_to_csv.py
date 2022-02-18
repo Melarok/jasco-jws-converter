@@ -1,7 +1,8 @@
-#Works only on python 2+due to OleFileIO_PL module
-from tkFileDialog import askdirectory,askopenfilenames
+# Works on Python 3, depends on the tkinter and olefile modules
+from tkinter import filedialog
+from tkinter import *
 from os import chdir, listdir
-import OleFileIO_PL as ofio
+import olefile as ofio
 from struct import unpack
 
 
@@ -27,7 +28,6 @@ class JwsHeader:
         #only defined if this is the header of a v1.5 jws file
         self.data_size = data_size
         self.header_names=header_names
-
 
 def _unpack_ole_jws_header(data):
     try:
@@ -59,7 +59,6 @@ def _unpack_ole_jws_header(data):
     except:
         exit("Cannot read DataInfo")
 
-
 def convert_jws_to_csv(filename):
     with open(filename,"rb") as f:
         # print(f.read(4))
@@ -73,7 +72,7 @@ def convert_jws_to_csv(filename):
         # print(oleobj.openstream('Y-Data').read())
         fmt = 'f' * header_obj.point_number*header_obj.channel_number
         values = unpack(fmt, oleobj.openstream('Y-Data').read())
-        chunks = [values[x:x + header_obj.point_number] for x in xrange(0, len(values), header_obj.point_number)]
+        chunks = [values[x:x + header_obj.point_number] for x in range(0, len(values), header_obj.point_number)]
 
         # print("len: %i*%i, %s" %(header_obj.point_number,header_obj.channel_number,chunks))
     with open(filename.rstrip("jws")+"csv","w") as r:
@@ -91,7 +90,7 @@ def convert_jws_to_csv(filename):
         print("%s is created." %r.name)
 
 if __name__=="__main__":
-    folder=askdirectory(title="Select the folder containing .JWS files to be converted")
+    folder=filedialog.askdirectory(title="Select the folder containing .JWS files to be converted")
     try:
         chdir(folder)
     except OSError:

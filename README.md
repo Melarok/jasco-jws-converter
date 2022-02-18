@@ -1,3 +1,13 @@
-# jasco_jws_reader
-This project aims to read multi channeled JWS files obtained from jasco spectrometers and convert to csv format in batches. Currently there is no alternative JWS reader that work both in batches and with multichanneled data.
+# Jasco .jws to .csv converter
+This project aims to read JWS files obtained from Jasco spectrometers and batch convert them to csv format.
 
+## Dependencies
+This project depends on these modules: (you can install them via pip)
+- tkinter
+- olefile
+
+## How to use it
+- clone this repository
+- run "python jws_to_csv.py" from a terminal
+- select the folder which contains your .jws files
+- your .csv files will be in the folder you selected earlier
