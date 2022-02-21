@@ -20,3 +20,7 @@ This project uses Python 3 and depends on the tkinter and the olefile python mod
 - clone this repository
 - run "python jws-to-csv.py" from a terminal
 - follow the GUI
+
+## Credits
+This Project is forked from https://github.com/odoluca/jasco_jws_reader and uses it's binary data extraction and conversion capability.
+I basically ported it to Python 3, added the ability to choose an output folder and switched to a GUI for easier usage.
