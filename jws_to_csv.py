@@ -1,7 +1,7 @@
-# Works on Python 3, depends on the tkinter and olefile modules
+# Works on Python 3, depends on the olefile module and the tk package
 from tkinter import filedialog
-from tkinter import *
-from os import chdir, listdir
+import os
+from os import chdir, listdir, makedirs
 import olefile as ofio
 from struct import unpack
 
@@ -27,26 +27,26 @@ class JwsHeader:
         self.x_increment = x_increment
         #only defined if this is the header of a v1.5 jws file
         self.data_size = data_size
-        self.header_names=header_names
+        self.header_names = header_names
 
 def _unpack_ole_jws_header(data):
     try:
         data_tuple = unpack('<LLLLLLddd', data[0:48])
         # print(data_tuple)
-        channels=data_tuple[3]
-        nxtfmt='<L'+'L'*channels
+        channels = data_tuple[3]
+        nxtfmt = '<L'+'L'*channels
         header_names = list(unpack(nxtfmt, data[48:48+4*(channels+1)]))
 
         for i,e in enumerate(header_names):
-            header_names[i]=data_definitions(e)
+            header_names[i] = data_definitions(e)
 
 
-        data_tuple+=tuple(header_names)
+        data_tuple += tuple(header_names)
         # print(header_names)
         # print(data_tuple)
 
-        lastPos=48+4*(channels+1)
-        nxtfmt='<LLdddd'
+        lastPos = 48+4*(channels+1)
+        nxtfmt = '<LLdddd'
         for pos in range(channels):
             data_tuple = data_tuple + unpack(nxtfmt, data[lastPos:lastPos+40])
             # print(data_tuple)
@@ -60,11 +60,11 @@ def _unpack_ole_jws_header(data):
         exit("Cannot read DataInfo")
 
 def convert_jws_to_csv(filename):
+    chdir(infolder)
     with open(filename,"rb") as f:
         # print(f.read(4))
-
         f.seek(0)
-        oleobj=ofio.OleFileIO(f)
+        oleobj = ofio.OleFileIO(f)
         data = oleobj.openstream('DataInfo')
         header_data = data.read()
         header_obj = _unpack_ole_jws_header(header_data)
@@ -75,9 +75,11 @@ def convert_jws_to_csv(filename):
         chunks = [values[x:x + header_obj.point_number] for x in range(0, len(values), header_obj.point_number)]
 
         # print("len: %i*%i, %s" %(header_obj.point_number,header_obj.channel_number,chunks))
+    
+    chdir(outfolder)
     with open(filename.rstrip("jws")+"csv","w") as r:
         print("file name: %s\t header names: %s" %(filename,header_obj.header_names))
-        r.write("sep=,\n")
+        #r.write("sep=,\n")
         r.write( ",".join(str(x) for x in header_obj.header_names))
         r.write("\n")
         for line_no in range(header_obj.point_number):
@@ -90,15 +92,25 @@ def convert_jws_to_csv(filename):
         print("%s is created." %r.name)
 
 if __name__=="__main__":
-    folder=filedialog.askdirectory(title="Select the folder containing .JWS files to be converted")
-    try:
-        chdir(folder)
-    except OSError:
-        exit("Cannot change current working directory.")
+    infolder = filedialog.askdirectory(title="Select the folder containing .jws files to be converted")
+    outfolder = filedialog.askdirectory(title="Select the folder where the .csv files should be saved")
+    
+    inExists = os.path.exists(infolder)
+    outExists = os.path.exists(outfolder)
 
-    files_found= [x for x in listdir(folder) if x.lower().endswith(".jws")]
-    if files_found.__len__()==0: exit("No .JWS files found.")
+    if not inExists:
+       exit("Input directory does not exist. Please choose a valid directory.")
+    
+    if not outExists:
+        print("Output directory does not exist. Trying to create it ...")
+        try:
+            os.makedirs(outfolder)
+            print("Output directory was created!")
+        except:
+            exit("Output directory could not be created! Exiting now.")
+
+    files_found=[x for x in listdir(infolder) if x.lower().endswith(".jws")]
+    if files_found.__len__() == 0: exit("No .JWS files found.")
     for filename in files_found:
         print(filename)
         convert_jws_to_csv(filename)
-

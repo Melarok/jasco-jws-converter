@@ -2,9 +2,19 @@
 This project aims to read jws files obtained from Jasco spectrometers and batch convert them to csv files.
 
 ## Dependencies
-This project uses Python 3 and depends on these modules: (you can install them via pip)
-- tkinter
-- olefile
+This project uses Python 3 and depends on the tkinter and the olefile python module
+
+### Arch
+```shell
+# pacman -Syu tk
+# pip install olefile
+```
+
+### Ubuntu / Debian
+```shell
+# apt install python3-tk
+# pip install olefile
+```
 
 ## How to use it
 - clone this repository
