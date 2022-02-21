@@ -18,6 +18,5 @@ This project uses Python 3 and depends on the tkinter and the olefile python mod
 
 ## How to use it
 - clone this repository
-- run "python jws_to_csv.py" from a terminal
-- select the folder which contains your .jws files
-- your .csv files will be in the folder you selected earlier
+- run "python jws-to-csv.py" from a terminal
+- follow the GUI
